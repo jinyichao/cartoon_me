@@ -6,7 +6,7 @@ sd_model_path = "danbrown/RevAnimated-v1-2-2"
 lora_model_path = "./lora/blindbox_v1_mix.safetensors"
 
 prompt = "detailed, portrait, cartoon, solo, masterpiece"
-negative_prompt = "EasyNegative, nsfw, watermark, low quality, worst quality"
+negative_prompt = "EasyNegative, nsfw, naked, watermark, angry, sad, low quality, worst quality"
 
 
 class ImageConvert:

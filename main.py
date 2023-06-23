@@ -14,7 +14,7 @@ hide_menu_style = """
         """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
 
-st.write(f"**_Get your cartoon character in 10 seconds_**")
+st.title(f"_Get your cartoon character here_")
 st.write("Just upload your portrait photo, and check the generated cartoon character.")
 st.write("If this isn't what you want, just try rerun or re-upload another photo, have fun!")
 st.sidebar.write("Upload and download")
