@@ -1,6 +1,7 @@
 from diffusers import StableDiffusionImg2ImgPipeline
+import torch
 
-device = "mps"
+device = "cuda" if torch.cuda.is_available() else "mps"
 sd_model_path = "danbrown/RevAnimated-v1-2-2"
 lora_model_path = "./lora/blindbox_v1_mix.safetensors"
 
@@ -17,6 +18,7 @@ class ImageConvert:
         )
         self.pipe = self.pipe.to(device)
         self.pipe.load_lora_weights(lora_model_path)
+        self.pipe.enable_xformers_memory_efficient_attention()
 
     def generate_image(self, image):
         init_image = image.convert("RGB")
