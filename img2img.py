@@ -18,7 +18,10 @@ class ImageConvert:
         )
         self.pipe = self.pipe.to(device)
         self.pipe.load_lora_weights(lora_model_path)
-        self.pipe.enable_xformers_memory_efficient_attention()
+        if device == "cuda":
+            self.pipe.enable_xformers_memory_efficient_attention()
+            self.pipe.enable_attention_slicing()
+            self.pipe.enable_sequential_cpu_offload()
 
     def generate_image(self, image):
         init_image = image.convert("RGB")
