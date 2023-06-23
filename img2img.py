@@ -1,25 +1,32 @@
-from PIL import Image
 from diffusers import StableDiffusionImg2ImgPipeline
 
 device = "mps"
 sd_model_path = "danbrown/RevAnimated-v1-2-2"
-pipe = StableDiffusionImg2ImgPipeline.from_pretrained(sd_model_path)
-pipe = pipe.to(device)
-
 lora_model_path = "./lora/blindbox_v1_mix.safetensors"
-pipe.load_lora_weights(lora_model_path)
 
-init_image = Image.open("test.png").convert("RGB")
-init_image = init_image.resize((512, 512))
+prompt = "detailed, portrait, cartoon, solo, masterpiece"
+negative_prompt = "EasyNegative, nsfw, watermark, low quality, worst quality"
 
-prompt = "1girl, detailed, portrait, cute, cartoon"
-negative_prompt = "nsfw, lowres, watermark"
 
-images = pipe(
-    prompt=prompt,
-    negative_prompt=negative_prompt,
-    image=init_image,
-    strength=0.55,
-    guidance_scale=7.5,
-).images
-images[0].save("output.png")
+class ImageConvert:
+    def __init__(self):
+        self.pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
+            sd_model_path,
+            safety_checker=None,
+            requires_safety_checker=False,
+        )
+        self.pipe = self.pipe.to(device)
+        self.pipe.load_lora_weights(lora_model_path)
+
+    def generate_image(self, image):
+        init_image = image.convert("RGB")
+        init_image = init_image.resize((512, 512))
+
+        images = self.pipe(
+            prompt=prompt,
+            negative_prompt=negative_prompt,
+            image=init_image,
+            strength=0.55,
+            guidance_scale=7.5,
+        ).images
+        return images[0]
