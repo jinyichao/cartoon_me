@@ -13,6 +13,7 @@ class ImageConvert:
     def __init__(self):
         self.pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
             sd_model_path,
+            torch_dtype=torch.float16,
             safety_checker=None,
             requires_safety_checker=False,
         )
