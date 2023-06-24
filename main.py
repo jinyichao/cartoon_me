@@ -67,5 +67,5 @@ st.write(
     f"as soon as you close the browser."
 )
 
-with st.expander(f"**_Not what you want? Let's make it better!_**"):
-    options_col, selection_col = st.columns(2)
+# with st.expander(f"**_Not what you want? Let's make it better!_**"):
+#     options_col, selection_col = st.columns(2)
