@@ -66,3 +66,6 @@ st.write(
     f"**Disclaimer:** we promise all the uploaded and generated images will be completely deleted "
     f"as soon as you close the browser."
 )
+
+with st.expander(f"**_Not what you want? Let's make it better!_**"):
+    options_col, selection_col = st.columns(2)

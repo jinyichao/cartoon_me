@@ -4,10 +4,10 @@ import torch
 device = "cuda" if torch.cuda.is_available() else "mps"
 torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 sd_model_path = "danbrown/RevAnimated-v1-2-2"
-lora_model_path = "./lora/blindbox_v1_mix.safetensors"
+# lora_model_path = "./lora/blindbox_v1_mix.safetensors"
 
-prompt = "detailed, cartoon, solo"
-negative_prompt = "nsfw, naked, watermark, angry, sad, low quality, worst quality"
+prompt = "((best quality)), ((masterpiece)), (detailed), cartoon"
+negative_prompt = "(worst quality, low quality:1.4), EasyNegative, nsfw, naked, watermark, angry, sad"
 
 
 class ImageConvert:
@@ -19,13 +19,13 @@ class ImageConvert:
             requires_safety_checker=False,
         )
         self.pipe = self.pipe.to(device)
-        self.pipe.load_lora_weights(lora_model_path)
+        # self.pipe.load_lora_weights(lora_model_path)
         if device == "cuda":
             self.pipe.enable_xformers_memory_efficient_attention()
             self.pipe.enable_attention_slicing()
             self.pipe.enable_sequential_cpu_offload()
 
-    def generate_image(self, image):
+    def generate_image(self, image, strength=0.55):
         init_image = image.convert("RGB")
         init_image = init_image.resize((512, 512))
 
@@ -33,7 +33,7 @@ class ImageConvert:
             prompt=prompt,
             negative_prompt=negative_prompt,
             image=init_image,
-            strength=0.55,
+            strength=strength,
             guidance_scale=7.5,
         ).images
         return images[0]
