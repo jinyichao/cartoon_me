@@ -5,7 +5,7 @@ from time import time
 
 from img2img import ImageConvert
 
-st.set_page_config(layout="wide", page_title="Get your cartoon character")
+st.set_page_config(layout="wide", page_title="Cartoonize anything with generative AI for free")
 hide_menu_style = """
         <style>
         #MainMenu {visibility: hidden;}
@@ -14,9 +14,7 @@ hide_menu_style = """
         """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
 
-st.title(f"_Get your cartoon character here_")
-st.write("Just upload your portrait photo, and check the generated cartoon character.")
-st.write("If this isn't what you want, just try rerun or re-upload another photo, have fun!")
+st.title(f"_Cartoonize anything with generative AI for free_")
 st.sidebar.write("Upload and download")
 
 
@@ -68,4 +66,10 @@ st.write(
 )
 
 # with st.expander(f"**_Not what you want? Let's make it better!_**"):
-#     options_col, selection_col = st.columns(2)
+#     sub_col1, sub_col2 = st.columns(2)
+#     gender = sub_col1.selectbox("gender", ("unknown", "girl", "boy"))
+#     body = sub_col2.selectbox("full/half body", ("unknown", "full body", "half body"))
+#     bg = sub_col1.selectbox("background", ("unknown", "indoor", "outdoor", "remove background"))
+#     month = sub_col2.selectbox("mouth", ("unknown", "closed mouth", "opened mouth", "smile", "laugh out"))
+#     style = sub_col1.selectbox("style", ("default", "popmart", "Shinkai"))
+#     hair = sub_col2.selectbox("hair", ("unknown", "long hair", "short hair"))
