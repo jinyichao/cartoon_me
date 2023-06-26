@@ -6,7 +6,7 @@ from time import time
 from img2img import ImageConvert
 
 default_prompt = "((best quality)), (detailed), cartoon"
-sessions = ["uploading", "rerun", "gender", "body", "mouth", "style", "hair", "bg"]
+sessions = ["uploading", "rerun", "gender", "body", "style", "hair", "bg"]
 
 st.set_page_config(layout="wide", page_title="Cartoonize anything with generative AI for free")
 hide_menu_style = """
@@ -100,7 +100,6 @@ with st.expander(f"**_Not what you want? Let's make it better!_**"):
     st.session_state["gender"] = sub_col1.selectbox("gender", ("default", "girl", "boy"))
     st.session_state["body"] = sub_col2.selectbox("full/half body", ("default", "full body", "half body"))
     st.session_state["bg"] = sub_col1.selectbox("background", ("default", "indoor", "outdoor", "sea side"))
-    st.session_state["mouth"] = sub_col2.selectbox("mouth", ("default", "closed mouth", "opened mouth"))
     st.session_state["style"] = sub_col1.selectbox("style", ("default", "Ukiyo-e", "vintage", "sci-fi", "realistic"))
     st.session_state["hair"] = sub_col2.selectbox("hair", ("default", "bangs hair", "mohawk", "ponytail", "long hair"))
     rerun = st.button("Re-generate", on_click=rerun_trigger)
