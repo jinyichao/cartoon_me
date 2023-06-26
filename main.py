@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 from io import BytesIO
 from time import time
-
+from rembg import remove
 from img2img import ImageConvert
 
 default_prompt = "((best quality)), (detailed), cartoon"
@@ -38,6 +38,8 @@ def generate_image(img, model):
     for s in sessions:
         prompt += append_prompt(s)
 
+    if st.session_state["bg"] is not None and st.session_state["bg"] != "default":
+        img = remove(img)
     generated = model.generate_image(img, prompt)
     st.sidebar.markdown("\n")
     st.sidebar.download_button(
@@ -99,7 +101,7 @@ with st.expander(f"**_Not what you want? Let's make it better!_**"):
     sub_col1, sub_col2 = st.columns(2)
     st.session_state["gender"] = sub_col1.selectbox("gender", ("default", "girl", "boy"))
     st.session_state["body"] = sub_col2.selectbox("full/half body", ("default", "full body", "half body"))
-    st.session_state["bg"] = sub_col1.selectbox("background", ("default", "indoor", "outdoor", "sea side"))
+    st.session_state["bg"] = sub_col1.selectbox("background", ("default", "seaside", "city landscape", "blue sky", "flowers"))
     st.session_state["style"] = sub_col1.selectbox("style", ("default", "Ukiyo-e", "vintage", "sci-fi", "realistic"))
     st.session_state["hair"] = sub_col2.selectbox("hair", ("default", "bangs hair", "mohawk", "ponytail", "long hair"))
     rerun = st.button("Re-generate", on_click=rerun_trigger)
