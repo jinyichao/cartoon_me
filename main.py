@@ -5,6 +5,9 @@ from time import time
 
 from img2img import ImageConvert
 
+default_prompt = "((best quality)), (detailed), cartoon"
+sessions = ["uploading", "rerun", "gender", "body", "mouth", "style", "hair", "bg"]
+
 st.set_page_config(layout="wide", page_title="Cartoonize anything with generative AI for free")
 hide_menu_style = """
         <style>
@@ -30,46 +33,74 @@ def convert_image(img):
     return byte_im
 
 
-def generate_image(upload, model):
-    image = Image.open(upload)
-    col1.write("Original Image")
-    col1.image(image)
+def generate_image(img, model):
+    prompt = default_prompt
+    for s in sessions:
+        prompt += append_prompt(s)
 
-    fixed = model.generate_image(image)
-    col2.write("Generated Image")
-    col2.image(fixed)
+    generated = model.generate_image(img, prompt)
     st.sidebar.markdown("\n")
     st.sidebar.download_button(
         "Download generated image",
-        convert_image(fixed),
+        convert_image(generated),
         f"{int(time()*100000)}.png",
         "image/png",
     )
+    return generated
 
 
-col1, col2 = st.columns(2)
-my_upload = st.sidebar.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
+def upload_trigger():
+    st.session_state["uploading"] = True
+
+
+def rerun_trigger():
+    st.session_state["rerun"] = True
+
+
+def init_sessions():
+    for s in sessions:
+        if s not in st.session_state:
+            st.session_state[s] = None
+
+
+def append_prompt(item, prefix="", suffix=""):
+    res = ""
+    value = st.session_state[item]
+    if isinstance(value, str) and value != "default":
+        res = f", {prefix}{value}{suffix}"
+    return res
+
 
 imageConvertModel = get_model()
-if my_upload is not None:
-    generate_image(my_upload, imageConvertModel)
-else:
-    col1.write("Original Image")
-    col1.image(Image.open("./test.png"))
-    col2.write("Generated Image")
-    col2.image(Image.open("./example.png"))
-    st.sidebar.markdown("\n")
 
+col1, col2 = st.columns(2)
+my_upload = st.sidebar.file_uploader("Upload an image", type=["png", "jpg", "jpeg"], on_change=upload_trigger)
+col1.write("Original Image")
+col2.write("Generated Image")
+
+init_sessions()
+if "generated_image" not in st.session_state:
+    st.session_state["generated_image"] = Image.open("./example.png")
 st.write(
     f"**Disclaimer:** we promise all the uploaded and generated images will be completely deleted "
     f"as soon as you close the browser."
 )
 
-# with st.expander(f"**_Not what you want? Let's make it better!_**"):
-#     sub_col1, sub_col2 = st.columns(2)
-#     gender = sub_col1.selectbox("gender", ("unknown", "girl", "boy"))
-#     body = sub_col2.selectbox("full/half body", ("unknown", "full body", "half body"))
-#     bg = sub_col1.selectbox("background", ("unknown", "indoor", "outdoor", "remove background"))
-#     month = sub_col2.selectbox("mouth", ("unknown", "closed mouth", "opened mouth", "smile", "laugh out"))
-#     style = sub_col1.selectbox("style", ("default", "popmart", "Shinkai"))
-#     hair = sub_col2.selectbox("hair", ("unknown", "long hair", "short hair"))
+initial_image = my_upload if my_upload else "./test.png"
+col1.image(Image.open(initial_image))
+
+if st.session_state["uploading"] or st.session_state["rerun"]:
+    st.session_state["generated_image"] = generate_image(Image.open(initial_image), imageConvertModel)
+    st.session_state["uploading"] = False
+    st.session_state["rerun"] = False
+col2.image(st.session_state["generated_image"])
+
+with st.expander(f"**_Not what you want? Let's make it better!_**"):
+    sub_col1, sub_col2 = st.columns(2)
+    st.session_state["gender"] = sub_col1.selectbox("gender", ("default", "girl", "boy"))
+    st.session_state["body"] = sub_col2.selectbox("full/half body", ("default", "full body", "half body"))
+    st.session_state["bg"] = sub_col1.selectbox("background", ("default", "indoor", "outdoor", "sea side"))
+    st.session_state["mouth"] = sub_col2.selectbox("mouth", ("default", "closed mouth", "opened mouth"))
+    st.session_state["style"] = sub_col1.selectbox("style", ("default", "Ukiyo-e", "vintage", "sci-fi", "realistic"))
+    st.session_state["hair"] = sub_col2.selectbox("hair", ("default", "bangs hair", "mohawk", "ponytail", "long hair"))
+    rerun = st.button("Re-generate", on_click=rerun_trigger)

@@ -6,7 +6,6 @@ torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 sd_model_path = "danbrown/RevAnimated-v1-2-2"
 # lora_model_path = "./lora/blindbox_v1_mix.safetensors"
 
-prompt = "((best quality)), (detailed), cartoon"
 negative_prompt = "(worst quality, low quality:1.4), EasyNegative, nsfw, naked, watermark, angry, sad"
 
 
@@ -25,7 +24,7 @@ class ImageConvert:
             self.pipe.enable_attention_slicing()
             self.pipe.enable_sequential_cpu_offload()
 
-    def generate_image(self, image, strength=0.55):
+    def generate_image(self, image, prompt, strength=0.6):
         init_image = image.convert("RGB")
         init_image = init_image.resize((512, 512))
 
