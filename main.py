@@ -8,7 +8,7 @@ from img2img import ImageConvert
 default_prompt = "((best quality)), (detailed), cartoon"
 sessions = ["uploading", "rerun", "gender", "body", "style", "hair", "bg"]
 
-st.set_page_config(layout="wide", page_title="Cartoonize anything with generative AI for free")
+st.set_page_config(layout="wide", page_title="Cartoonize anything with generative AI for free|万物皆可萌")
 hide_menu_style = """
         <style>
         #MainMenu {visibility: hidden;}
@@ -17,7 +17,7 @@ hide_menu_style = """
         """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
 
-st.title(f"_Cartoonize anything with generative AI for free_")
+st.title(f"_Cartoonize anything with generative AI for free|万物皆可萌_")
 st.sidebar.write("Upload and download")
 
 
