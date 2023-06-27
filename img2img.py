@@ -5,7 +5,7 @@ from PIL import Image
 from diffusers import StableDiffusionControlNetImg2ImgPipeline, ControlNetModel, UniPCMultistepScheduler
 
 
-device = "cuda" if torch.cuda.is_available() else "mps"
+device = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 sd_model_path = "danbrown/RevAnimated-v1-2-2"
 controlnet_path = "DionTimmer/controlnet_qrcode-control_v1p_sd15"
