@@ -1,9 +1,0 @@
-[server]
-port=8052
-headless=true
-enableStaticServing=true
-maxUploadSize = 20
-
-[browser] 
-serverAddress = "cartoonme.fun"
-serverPort = 8052
