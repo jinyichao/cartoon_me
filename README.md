@@ -5,7 +5,7 @@ In addition to generate cartoonized images, by loading the [QR code controlnet m
 
 ### Example
 
-Input image  |           Generated Image            | Image with QR code 
+Input image  |           Generated Image            | Generated Image with QR code 
 :-------------------------:|:------------------------------------:|:--------------:
 <img src="test.png" width="512"/>  | <img src="example.png" width="512"/> | <img src="qr_example.png" width="512"/>
 
