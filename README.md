@@ -5,20 +5,9 @@ In addition, by loading the [QR code controlnet model](https://civitai.com/model
 
 ### Example
 
-<style>
-table th:first-of-type {
-    width: 33%;
-}
-table th:nth-of-type(2) {
-    width: 33%;
-}
-table th:nth-of-type(3) {
-    width: 33%;
-}
-</style>
-Input Image  |           Generated Image            | Generated Image with QR code 
-:---------------------------------:|:------------------------------------:|:-------------------------:
-<img src="test.png" width="512"/>  | <img src="example.png" width="512"/> | <img src="qr_example.png" width="512"/>
+| Input Image&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Generated Image | Generated Image with QR code |
+|---|---|---|
+|  <img src="test.png" width="512"/> | <img src="example.png" width="512"/>   | <img src="qr_example.png" width="512"/>|
 
 
 
