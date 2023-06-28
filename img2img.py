@@ -31,7 +31,7 @@ class ImageConvert:
             self.pipe.enable_sequential_cpu_offload()
             self.pipe.scheduler = UniPCMultistepScheduler.from_config(self.pipe.scheduler.config)
 
-    def generate_image(self, image, prompt, qr_data=None, strength=0.6):
+    def generate_image(self, image, prompt, qr_data=None, strength=0.6, scale=2.8):
         init_image = image.convert("RGB")
         if qr_data:
             w, h = 768, 768
@@ -39,12 +39,13 @@ class ImageConvert:
             buffer = io.BytesIO()
             qrobject.png(buffer, scale=20)
             control_image = Image.open(buffer).resize((w, h))
-            conditioning_scale = 2.6
-            guidance_scale = 5.5
+            conditioning_scale = scale
+            guidance_scale = 5.0
         else:
             w, h = 512, 512
             control_image = Image.new("RGB", (w, h))
             conditioning_scale = 0.0
+            strength = 0.6
             guidance_scale = 7.5
         images = self.pipe(
             prompt=prompt,

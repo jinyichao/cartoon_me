@@ -6,7 +6,7 @@ from rembg import remove
 from img2img import ImageConvert
 
 default_prompt = "((best quality)), (detailed), cartoon"
-sessions = ["uploading", "rerun", "gender", "body", "style", "hair", "bg"]
+sessions = ["uploading", "rerun", "gender", "body", "style", "hair", "bg", "strength", "control_scale"]
 
 st.set_page_config(layout="wide", page_title="Cartoonize Everything|万物皆可萌")
 hide_menu_style = """
@@ -33,14 +33,20 @@ def convert_image(img):
     return byte_im
 
 
-def generate_image(img, model):
+def generate_image(img, model, qr_data):
     prompt = default_prompt
     for s in sessions:
         prompt += append_prompt(s)
 
     if st.session_state["bg"] is not None and st.session_state["bg"] != "default":
         img = remove(img)
-    generated = model.generate_image(img, prompt)
+    generated = model.generate_image(
+        img,
+        prompt,
+        qr_data=qr_data,
+        strength=st.session_state["strength"],
+        scale=st.session_state["control_scale"],
+    )
     st.sidebar.markdown("\n")
     st.sidebar.download_button(
         "Download generated image",
@@ -73,10 +79,22 @@ def append_prompt(item, prefix="", suffix=""):
     return res
 
 
+mode = st.radio(
+        "Select cartoonization mode",
+        ["photo", "qr code"],
+        horizontal=True,
+    )
+
+if mode == "qr code":
+    qr_content = st.text_input("Input the data you want to embed into the QR code", "https://cartoonme.fun")
+else:
+    qr_content = None
+
 imageConvertModel = get_model()
 
 col1, col2 = st.columns(2)
 my_upload = st.sidebar.file_uploader("Upload an image", type=["png", "jpg", "jpeg"], on_change=upload_trigger)
+
 col1.write("Original Image")
 col2.write("Generated Image")
 
@@ -92,7 +110,7 @@ initial_image = my_upload if my_upload else "./test.png"
 col1.image(Image.open(initial_image))
 
 if st.session_state["uploading"] or st.session_state["rerun"]:
-    st.session_state["generated_image"] = generate_image(Image.open(initial_image), imageConvertModel)
+    st.session_state["generated_image"] = generate_image(Image.open(initial_image), imageConvertModel, qr_content)
     st.session_state["uploading"] = False
     st.session_state["rerun"] = False
 col2.image(st.session_state["generated_image"])
@@ -100,7 +118,12 @@ col2.image(st.session_state["generated_image"])
 with st.expander(f"**_Not what you want? Let's make it better!_**"):
     sub_col1, sub_col2 = st.columns(2)
     st.session_state["gender"] = sub_col1.selectbox("gender", ("default", "girl", "boy"))
-    st.session_state["bg"] = sub_col2.selectbox("background", ("default", "seaside", "city landscape", "blue sky", "flowers"))
+    st.session_state["bg"] = sub_col2.selectbox(
+        "background", ("default", "seaside", "city landscape", "blue sky", "flowers")
+    )
     st.session_state["style"] = sub_col1.selectbox("style", ("default", "vintage", "sci-fi", "realistic"))
     st.session_state["hair"] = sub_col2.selectbox("hair", ("default", "bangs hair", "mohawk", "ponytail", "long hair"))
+    if mode == "qr code":
+        st.session_state["strength"] = sub_col1.slider("strength", 0.3, 0.9, 0.8)
+        st.session_state["control_scale"] = sub_col2.slider("control_scale", 1.2, 10.0, 1.8)
     rerun = st.button("Re-generate", on_click=rerun_trigger)
