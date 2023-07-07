@@ -7,3 +7,4 @@ transformers==4.30.2
 accelerate==0.20.3
 xformers==0.0.20
 pyqrcode==1.2.1
+pypng==0.20220715.0
